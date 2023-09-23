@@ -3,7 +3,7 @@
 import { FormEventHandler, useState } from 'react';
 import { Dialog, Flex, Text, TextField, Button } from '@radix-ui/themes';
 
-import { ActionButton } from "../components/ActionButton";
+import { ActionButton } from "../../components/ActionButton";
 
 export const ButtonFeedAdd = () => {
   const [open, setOpen] = useState(false);
