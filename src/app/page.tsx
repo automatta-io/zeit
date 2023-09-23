@@ -1,18 +1,12 @@
-import { Container, Flex } from '@radix-ui/themes';
+import { Container, Flex } from "@radix-ui/themes"
 
-import { FeedList } from './Feed/FeedList';
-import { ButtonFeedAdd } from './ButtonFeedAdd';
+import { HeaderLogin } from "./HeaderLogin"
 
-export default async function Home() {
+export default function Index() {
   return (
     <Container size='4' style={{ padding: 'var(--space-8) 0' }}>
-      <Flex gap='4'>
-        <FeedList />
-        <Flex direction='column' width='100%'>
-          <Flex justify='end' width='100%'>
-            <ButtonFeedAdd />
-          </Flex>
-        </Flex>
+      <Flex direction='column'>
+        <HeaderLogin />
       </Flex>
     </Container>
   )
