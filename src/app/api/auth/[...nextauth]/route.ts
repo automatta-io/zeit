@@ -1,6 +1,9 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
+import { db } from '../../db';
+import { users, sessions } from '../../schema';
+
 const handler = NextAuth({
   pages: {
     signIn: "/login",
@@ -38,6 +41,22 @@ const handler = NextAuth({
       return token;
     },
   },
+  events: {
+    signIn: async ({ user: _user, account }) => {
+      const user = await db.insert(users).values({
+        email: _user.email,
+        name: _user.name,
+        profilePicture: _user.image,
+      }).returning({ userId: users.id });
+
+      await db.insert(sessions).values({
+        user: user[0].userId,
+        accessToken: account?.access_token,
+        active: true,
+        expiresAt: account?.expires_at,
+      });
+    }
+  }
 });
 
 export { handler as GET, handler as POST };
