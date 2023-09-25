@@ -1,17 +1,65 @@
-# fly.toml app configuration file generated for zeit on 2023-09-22T21:33:31-03:00
+# fly.toml app configuration file generated for zeit-pg on 2023-09-24T22:23:10-03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "zeit"
+app = "zeit-pg"
 primary_region = "gru"
 
-[build]
+[env]
+  FLY_SCALE_TO_ZERO = "1h"
+  PRIMARY_REGION = "gru"
 
-[http_service]
-  internal_port = 3000
-  force_https = true
-  auto_stop_machines = true
+[[mounts]]
+  source = "pg_data"
+  destination = "/data"
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 5432
   auto_start_machines = true
-  min_machines_running = 0
-  processes = ["app"]
+
+  [[services.ports]]
+    port = 5432
+    handlers = ["pg_tls"]
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 1000
+    soft_limit = 1000
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 5433
+  auto_start_machines = true
+
+  [[services.ports]]
+    port = 5433
+    handlers = ["pg_tls"]
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 1000
+    soft_limit = 1000
+
+[checks]
+  [checks.pg]
+    port = 5500
+    type = "http"
+    interval = "15s"
+    timeout = "10s"
+    path = "/flycheck/pg"
+  [checks.role]
+    port = 5500
+    type = "http"
+    interval = "15s"
+    timeout = "10s"
+    path = "/flycheck/role"
+  [checks.vm]
+    port = 5500
+    type = "http"
+    interval = "15s"
+    timeout = "10s"
+    path = "/flycheck/vm"
+
+[[metrics]]
+  port = 9187
+  path = "/metrics"
