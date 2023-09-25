@@ -1,8 +1,8 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
-import { db } from '../../db';
-import { users, sessions } from '../../schema';
+import { db } from '../../../db/db';
+import { users, sessions } from '../../../db/schema';
 
 const handler = NextAuth({
   pages: {
