@@ -1,14 +1,17 @@
-import { drizzle, PostgresJsDatabase,  } from 'drizzle-orm/postgres-js';
+import { drizzle, PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import type { Options as PostgresOptions } from 'postgres';
-import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import postgres from 'postgres';
+import { config } from 'dotenv';
 
-const createPgClient = (options?: PostgresOptions<{}>) => postgres(process.env.POSTGRES_URI as string, options);
+import * as schema from './schema';
+
+config({
+  debug: process.env.DEBUG as unknown as boolean,
+  path: './.env.local',
+}); 
+
+export const createPgClient = (options?: PostgresOptions<{}>) => postgres(process.env.POSTGRES_URI as string, options);
 
 const client = createPgClient();
 
-export const db: PostgresJsDatabase = drizzle(client);
-
-// if (process.env.NODE_ENV === 'development') {
-//   await migrate(drizzle(createPgClient({ max: 1 })), { migrationsFolder: './migrations' });
-// }
+export const db: PostgresJsDatabase = drizzle(client, { schema });

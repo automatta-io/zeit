@@ -3,7 +3,7 @@
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 
-export const Form = () => {
+export const LoginForm = () => {
   const search = useSearchParams();
   const callbackUrl = search.get('callbackUrl') || '/home';
 
