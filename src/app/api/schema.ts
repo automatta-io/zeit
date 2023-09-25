@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, uuid, uniqueIndex } from 'drizzle-orm/pg-core';
+import { pgTable, text, serial, integer, uuid, boolean, uniqueIndex } from 'drizzle-orm/pg-core';
 
 export const users = pgTable(
   "users",
@@ -16,10 +16,11 @@ export const users = pgTable(
 export const sessions = pgTable(
   'sessions',
   {
-    id: uuid('id').primaryKey(),
+    id: uuid('id').primaryKey().defaultRandom(),
     user: integer('user').notNull().references(() => users.id),
+    active: boolean('active'),
     expiresAt: text('expires_at'),
-    sessionId: text('session_id'),
+    accessToken: text('access_token'),
   }
 );
 

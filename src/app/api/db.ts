@@ -9,6 +9,6 @@ const client = createPgClient();
 
 export const db: PostgresJsDatabase = drizzle(client);
 
-if (process.env.NODE_ENV === 'development') {
-  await migrate(drizzle(createPgClient({ max: 1 })), { migrationsFolder: './migration' });
-}
+// if (process.env.NODE_ENV === 'development') {
+//   await migrate(drizzle(createPgClient({ max: 1 })), { migrationsFolder: './migrations' });
+// }
