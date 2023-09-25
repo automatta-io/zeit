@@ -8,7 +8,7 @@ config({
 
 export default {
   driver: 'pg',
-  schema: './src/app/api/schema.ts',
+  schema: './src/app/db/schema.ts',
   out: './drizzle',
   dbCredentials: {
     connectionString: process.env.POSTGRES_URI as string,
