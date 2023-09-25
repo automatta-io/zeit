@@ -1,4 +1,13 @@
-import { pgTable, text, serial, integer, uuid, boolean, uniqueIndex } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  text,
+  serial,
+  integer,
+  uuid,
+  boolean,
+  uniqueIndex,
+} from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 
 export const users = pgTable(
   "users",
@@ -13,6 +22,10 @@ export const users = pgTable(
   }),
 );
 
+export const usersRelations = relations(users, ({ many }) => ({
+  sessions: many(sessions),
+}))
+
 export const sessions = pgTable(
   'sessions',
   {
@@ -23,6 +36,10 @@ export const sessions = pgTable(
     accessToken: text('access_token'),
   }
 );
+
+export const sessionsRelations = relations(sessions, ({ one }) => ({
+  users: one(users, { fields: [sessions.user], references: [users.id], relationName: 'sessions_user' }),
+}));
 
 export const feeds = pgTable(
   'feeds',
