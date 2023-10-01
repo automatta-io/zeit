@@ -9,10 +9,14 @@
     "lint": "next lint",
     "generate": "drizzle-kit generate:pg",
     "drop": "drizzle-kit drop",
-    "push": "drizzle-kit push:pg"
+    "push": "drizzle-kit push:pg",
+    "premigrate": "pnpm generate",
+    "migrate": "tsx ./src/app/db/migration.ts"
   },
   "dependencies": {
+    "@radix-ui/colors": "3.0.0-rc.5",
     "@radix-ui/react-tabs": "^1.0.4",
+    "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/themes": "^1.1.2",
     "@types/node": "20.6.0",
     "@types/react": "18.2.21",
@@ -22,7 +26,7 @@
     "drizzle-orm": "^0.28.6",
     "eslint": "8.49.0",
     "eslint-config-next": "13.4.19",
-    "next": "13.4.19",
+    "next": "13.5.2",
     "next-auth": "^4.23.1",
     "pg": "^8.11.3",
     "postgres": "^3.3.5",
@@ -33,6 +37,7 @@
   },
   "devDependencies": {
     "@flydotio/dockerfile": "^0.4.10",
-    "drizzle-kit": "^0.19.13"
+    "drizzle-kit": "^0.19.13",
+    "tsx": "^3.13.0"
   }
 }

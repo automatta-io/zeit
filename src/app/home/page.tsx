@@ -1,7 +1,7 @@
 import { Container, Flex } from '@radix-ui/themes';
 
 import { FeedList } from './Feed/FeedList';
-import { ButtonFeedAdd } from './ButtonFeedAdd';
+import { FeedButtonAdd } from './FeedButtonAdd';
 
 export default async function Home() {
   return (
@@ -10,7 +10,7 @@ export default async function Home() {
         <FeedList />
         <Flex direction='column' width='100%'>
           <Flex justify='end' width='100%'>
-            <ButtonFeedAdd />
+            <FeedButtonAdd />
           </Flex>
         </Flex>
       </Flex>
