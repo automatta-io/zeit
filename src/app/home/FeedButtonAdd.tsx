@@ -1,35 +1,43 @@
 'use client';
 
-import { FormEventHandler, useState } from 'react';
-import { Dialog, Flex, Text, TextField, Button } from '@radix-ui/themes';
+import { Dialog, Flex, Button, Text, TextField } from '@radix-ui/themes';
+import { useRef, useState } from 'react';
 
 import { ActionButton } from "../../components/ActionButton";
+import { feedAddAction } from './FeedAddAction';
+import { FeedButtonToastSuccess } from './FeedButtonToastSuccess';
 
-export const ButtonFeedAdd = () => {
+export const FeedButtonAdd = () => {
+  const formRef = useRef<HTMLFormElement | null>(null);
+
   const [open, setOpen] = useState(false);
+  const [openToastSuccess, setOpenToastSuccess] = useState(false);
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
-
-    const form = new FormData(e.currentTarget);
-
+  const handleAction = async (formData: FormData) => {
     const data = {
-      name: form.get('name') || null,
-      url:  form.get('url'),
+      name: formData.get('name') as string || null,
+      url: formData.get('url') as string,
     }
 
-    const feeds = localStorage.getItem('feeds');
+    if (!data.url) {
+      // TODO: Improve this error
+      console.log('Error: missing feed URL');
+      return;
+    }
 
-    if (!feeds) {
-      localStorage.setItem('feeds', JSON.stringify([data]));
-    } else {
-      localStorage.setItem('feeds', JSON.stringify([data, ...JSON.parse(feeds)]));
+    const { error } = await feedAddAction(data);
+
+    if (error) {
+      return;
     }
 
     setOpen(false);
+    setOpenToastSuccess(true);
+    formRef.current?.reset();
   }
 
   return (
+    <>
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger>
         <ActionButton>+</ActionButton>
@@ -42,7 +50,7 @@ export const ButtonFeedAdd = () => {
         </Dialog.Description>
 
         <Flex direction='column' gap='5'>
-          <form id='form-add-rss-feed' onSubmit={handleSubmit}>
+          <form ref={formRef} id='form-add-rss-feed' action={handleAction}>
             <Flex direction='column' gap='3'>
               <label>
                 <Text as='div' size='2' mb='1' weight='bold'>URL</Text>
@@ -54,7 +62,7 @@ export const ButtonFeedAdd = () => {
               </label>
             </Flex>
           </form>
-  
+
           <Flex gap='3' justify='end' align='center'>
             <Dialog.Close>
               <Button variant='ghost' color='gray'>
@@ -66,5 +74,7 @@ export const ButtonFeedAdd = () => {
         </Flex>
       </Dialog.Content>
     </Dialog.Root>
+    <FeedButtonToastSuccess open={openToastSuccess} onOpenChange={setOpenToastSuccess} />
+    </>
   );
 }
