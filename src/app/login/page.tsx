@@ -9,7 +9,7 @@ export default async function LogIn() {
   const authSession = await getServerSession();
 
   const user = await db.query.users.findFirst({
-    where: (users, { eq }) => eq(users.email, authSession?.user?.email),
+    where: (users, { eq }) => eq(users.email, authSession?.user?.email || ''),
     with: {
       sessions: true,
     },
