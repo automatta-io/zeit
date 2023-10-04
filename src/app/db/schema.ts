@@ -24,6 +24,7 @@ export const users = pgTable(
 
 export const usersRelations = relations(users, ({ many }) => ({
   sessions: many(sessions),
+  feeds: many(feeds),
 }))
 
 export const sessions = pgTable(
@@ -47,8 +48,13 @@ export const feeds = pgTable(
     id: serial('id').primaryKey(),
     name: text('name'),
     url: text('url'),
+    user: integer('user').notNull().references(() => users.id),
   },
 );
+
+export const feedsRelations = relations(feeds, ({ one }) => ({
+  users: one(users, { fields: [feeds.user], references: [users.id], relationName: 'feeds_user' }),
+}));
 
 export const groups = pgTable(
   'groups',
