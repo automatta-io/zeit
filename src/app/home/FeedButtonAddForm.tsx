@@ -1,15 +1,25 @@
 import { Flex, Text, TextField } from '@radix-ui/themes';
-import { experimental_useFormState as useFormState } from 'react-dom';
+import { useFormState } from 'react-dom';
 
-import { feedAddAction } from './FeedAddServerAction';
+import { FeedAddServerState, feedAddAction } from './FeedAddServerAction';
+import { FeedAddStatusEnum } from './FeedAddStatusEnum';
 
-const initialState = {
-  name: null,
-  url: null,
+const initialState: FeedAddServerState = {
+  status: FeedAddStatusEnum.INITIAL,
+  message: null,
+  data: {},
 }
 
-export const FeedButtonAddForm = () => {
-  const [_, feedAddFormAction] = useFormState(feedAddAction, initialState);
+type FeedButtonAddFormProps = {
+  onSuccess: (state: FeedAddServerState) => void;
+}
+
+export const FeedButtonAddForm = ({ onSuccess }: FeedButtonAddFormProps) => {
+  const [state, feedAddFormAction] = useFormState(feedAddAction, initialState);
+
+  if (state.status === FeedAddStatusEnum.SUCCESS) {
+    onSuccess(state);
+  }
 
   return (
     <form id='form-add-rss-feed' action={feedAddFormAction}>

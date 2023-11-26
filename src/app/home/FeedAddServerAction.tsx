@@ -5,39 +5,54 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]/route';
 import { db } from '../db/db';
 import { feeds } from '../db/schema';
+import { FeedAddStatusEnum } from './FeedAddStatusEnum';
 
-type Data = {
-  name: string | null;
-  url: string | null;
+export type FeedAddServerState = {
+  status: FeedAddStatusEnum;
+  message: string | null;
+  data: unknown;
 }
 
-export const feedAddAction = async (prevState: Data, data: Data) => {
+export const feedAddAction = async (_prevState: FeedAddServerState, formData: FormData): Promise<FeedAddServerState> => {
   const session = await getServerSession(authOptions);
 
   if (!session) {
     return {
-      error: 'Wrong session',
+      status: FeedAddStatusEnum.ERROR,
+      message: 'Unavailable session',
+      data: null,
     } 
   }
-  
+
+  const data = {
+    url: formData.get('url'),
+    name: formData.get('name'),
+  }
+
   if (!data.url) {
     return {
-      error: 'Missing feed URL',
+      status: FeedAddStatusEnum.ERROR,
+      message: 'Invalid URL',
+      data: null,
     }
   }
 
   const user = await db.query.users.findFirst({
-    where: (users, { eq }) => eq(users.email, session?.user?.email),
+    where: (user, { eq }) => eq(user.email, session.user!.email!),
     columns: {
       id: true,
     },
   });
 
   await db.insert(feeds).values({
-    user: user.id,
-    name: data.name,
+    user: user!.id,
     url: data.url,
+    name: data.name,
   });
 
-  return { error: null };
+  return {
+    status: FeedAddStatusEnum.SUCCESS,
+    message: 'Success added a new',
+    data: {},
+  };
 }

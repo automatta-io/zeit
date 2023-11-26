@@ -11,6 +11,11 @@ export const FeedButtonAdd = () => {
   const [open, setOpen] = useState(false);
   const [openToastSuccess, setOpenToastSuccess] = useState(false);
 
+  const handleOpenToast = () => {
+    setOpenToastSuccess(true);
+    setOpen(false);
+  }
+
   return (
     <>
       <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -25,8 +30,7 @@ export const FeedButtonAdd = () => {
           </Dialog.Description>
 
           <Flex direction='column' gap='5'>
-            <FeedButtonAddForm />
-
+            <FeedButtonAddForm onSuccess={handleOpenToast} />
             <Flex gap='3' justify='end' align='center'>
               <Dialog.Close>
                 <Button variant='ghost' color='gray'>

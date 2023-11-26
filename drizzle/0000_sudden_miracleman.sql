@@ -1,7 +1,8 @@
 CREATE TABLE IF NOT EXISTS "feeds" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" text,
-	"url" text
+	"url" text NOT NULL,
+	"user" integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "groups" (
@@ -13,10 +14,11 @@ CREATE TABLE IF NOT EXISTS "groups" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "sessions" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user" integer NOT NULL,
+	"active" boolean,
 	"expires_at" text,
-	"session_id" text
+	"access_token" text
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
@@ -29,6 +31,12 @@ CREATE TABLE IF NOT EXISTS "users" (
 --> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "groups_slug_unique_index" ON "groups" ("slug");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "users_email_unique_index" ON "users" ("email");--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "feeds" ADD CONSTRAINT "feeds_user_users_id_fk" FOREIGN KEY ("user") REFERENCES "users"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_users_id_fk" FOREIGN KEY ("user") REFERENCES "users"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION

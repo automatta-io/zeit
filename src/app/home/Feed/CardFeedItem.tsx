@@ -1,10 +1,15 @@
+'use client';
+
 import { Flex, Avatar, Heading } from '@radix-ui/themes';
 
+import { useFeedContext } from '../FeedContext';
+import type { Feed } from '../FeedContext';
+
 type CardFeedItemProps = {
-  title: string;
+  feed: Feed;
 }
 
-export const getInitials = (name: string) => {
+const getInitials = (name: string) => {
   let _name = name.trim()
 
   if (_name.length <= 2) {
@@ -18,9 +23,17 @@ export const getInitials = (name: string) => {
       .join('')
 }
 
-export const CardFeedItem = ({ title }: CardFeedItemProps) => {
+export const CardFeedItem = ({ feed }: CardFeedItemProps) => {
+  const { setSelectedFeed } = useFeedContext();
+
+  const title = feed.title;
+
+  const handleSelectFeed = () => {
+    setSelectedFeed(feed);
+  }
+
   return (
-    <Flex gap='2' align='center'>
+    <Flex gap='2' align='center' onClick={handleSelectFeed}>
       <Avatar size='1' fallback={getInitials(title)} />
       <Heading size='1'>{title}</Heading>
     </Flex>

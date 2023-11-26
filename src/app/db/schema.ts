@@ -47,7 +47,7 @@ export const feeds = pgTable(
   {
     id: serial('id').primaryKey(),
     name: text('name'),
-    url: text('url'),
+    url: text('url').notNull(),
     user: integer('user').notNull().references(() => users.id),
   },
 );

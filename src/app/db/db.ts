@@ -14,4 +14,4 @@ export const createPgClient = (options?: PostgresOptions<{}>) => postgres(proces
 
 const client = createPgClient();
 
-export const db: PostgresJsDatabase = drizzle(client, { schema });
+export const db = drizzle<typeof schema>(client, { schema });
