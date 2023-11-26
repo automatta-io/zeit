@@ -4,14 +4,14 @@ import { getServerSession } from 'next-auth';
 
 import { authOptions } from '../api/auth/[...nextauth]/route';
 import { db } from '../db/db';
-import { feeds, users } from '../db/schema';
+import { feeds } from '../db/schema';
 
 type Data = {
   name: string | null;
   url: string | null;
 }
 
-export const feedAddAction = async (data: Data) => {
+export const feedAddAction = async (prevState: Data, data: Data) => {
   const session = await getServerSession(authOptions);
 
   if (!session) {

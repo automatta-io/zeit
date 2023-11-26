@@ -4,7 +4,6 @@ import Parser from 'rss-parser';
 
 import { authOptions } from "../../api/auth/[...nextauth]/route";
 import { db } from '../../db/db';
-import { feeds } from '../../db/schema';
 import { CardFeedItem } from "./CardFeedItem"
 
 const parser = new Parser();
